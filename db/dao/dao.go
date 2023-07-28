@@ -6,6 +6,7 @@ import (
 )
 
 const tableName = "Counters"
+const tableGoods = "Goods"
 
 // ClearCounter 清除Counter
 func (imp *CounterInterfaceImp) ClearCounter(id int32) error {
@@ -36,7 +37,7 @@ func (imp *CounterInterfaceImp) GetGoods(id int32) (*model.GoodsModel, error) {
 	var good = new(model.GoodsModel)
 
 	cli := db.Get()
-	err = cli.Table(tableName).Where("id = ?", id).First(good).Error
+	err = cli.Table(tableGoods).Where("id = ?", id).First(good).Error
 
 	return good, err
 }
