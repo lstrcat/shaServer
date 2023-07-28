@@ -13,6 +13,8 @@ func main() {
 		panic(fmt.Sprintf("mysql init failed with %+v", err))
 	}
 
+	log.Println("云端")
+
 	http.HandleFunc("/", service.IndexHandler)
 	http.HandleFunc("/api/count", service.CounterHandler)
 
