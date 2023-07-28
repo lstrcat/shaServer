@@ -22,28 +22,15 @@ type JsonResult struct {
 
 // CounterHandler 商品接口
 func GoodsHandler(w http.ResponseWriter, r *http.Request) {
-	res := &JsonResult{}
 
-	if r.Method == http.MethodGet {
-		good, err := getGoods()
-		if err != nil {
-			res.Code = -1
-			res.ErrorMsg = err.Error()
-		} else {
-			res.Data = good.Json
-		}
-	} else {
-		res.Code = -1
-		res.ErrorMsg = fmt.Sprintf("请求方法 %s 不支持", r.Method)
-	}
-
-	msg, err := json.Marshal(res)
+	good, err := getGoods()
 	if err != nil {
 		fmt.Fprint(w, "内部错误")
-		return
+	} else {
+		w.Header().Set("content-type", "application/json")
+		w.Write([]byte(good.Json))
 	}
-	w.Header().Set("content-type", "application/json")
-	w.Write(msg)
+
 }
 
 // IndexHandler 计数器接口
