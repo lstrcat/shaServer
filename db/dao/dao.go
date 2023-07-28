@@ -29,3 +29,14 @@ func (imp *CounterInterfaceImp) GetCounter(id int32) (*model.CounterModel, error
 
 	return counter, err
 }
+
+// GetGoods 查询商品
+func (imp *CounterInterfaceImp) GetGoods(id int32) (*model.GoodsModel, error) {
+	var err error
+	var good = new(model.GoodsModel)
+
+	cli := db.Get()
+	err = cli.Table(tableName).Where("id = ?", id).First(good).Error
+
+	return good, err
+}

@@ -20,6 +20,32 @@ type JsonResult struct {
 	Data     interface{} `json:"data"`
 }
 
+// CounterHandler 商品接口
+func GoodsHandler(w http.ResponseWriter, r *http.Request) {
+	res := &JsonResult{}
+
+	if r.Method == http.MethodGet {
+		good, err := getGoods()
+		if err != nil {
+			res.Code = -1
+			res.ErrorMsg = err.Error()
+		} else {
+			res.Data = good.Json
+		}
+	} else {
+		res.Code = -1
+		res.ErrorMsg = fmt.Sprintf("请求方法 %s 不支持", r.Method)
+	}
+
+	msg, err := json.Marshal(res)
+	if err != nil {
+		fmt.Fprint(w, "内部错误")
+		return
+	}
+	w.Header().Set("content-type", "application/json")
+	w.Write(msg)
+}
+
 // IndexHandler 计数器接口
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	data, err := getIndex()
@@ -120,6 +146,16 @@ func upsertCounter(r *http.Request) (int32, error) {
 
 func clearCounter() error {
 	return dao.Imp.ClearCounter(1)
+}
+
+// getCurrentCounter 查询商品
+func getGoods() (*model.GoodsModel, error) {
+	good, err := dao.Imp.GetGoods(1)
+	if err != nil {
+		return nil, err
+	}
+
+	return good, nil
 }
 
 // getCurrentCounter 查询当前计数器
